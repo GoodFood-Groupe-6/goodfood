@@ -1,0 +1,20 @@
+version: '3'
+services:
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8
+    ports:
+      - 5672:5672
+      - 15672:15672
+    environment:
+      - RABBITMQ_DEFAULT_USER=${DOCKER_RABBITMQ_DEFAULT_USER}
+      - RABBITMQ_DEFAULT_PASS=${DOCKER_RABBITMQ_DEFAULT_PASS}
+  ms-admin:
+    container_name: admin
+    build:
+      context: ./services/admin
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - rabbitmq
