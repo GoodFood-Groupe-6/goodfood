@@ -11,17 +11,17 @@ services:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
 
-  ms-admin:
-    container_name: admin
-    build:
-      context: ./services/admin
-      dockerfile: Dockerfile
-    ports:
-      - 3000:3000
-    depends_on:
-      - rabbitmq
-    networks:
-      - mynetwork
+  # ms-admin:
+  #   container_name: admin
+  #   build:
+  #     context: ./services/admin
+  #     dockerfile: Dockerfile
+  #   ports:
+  #     - 3000:3000
+  #   depends_on:
+  #     - rabbitmq
+  #   networks:
+  #     - mynetwork
 
 volumes:
   rabbitmq_data:
