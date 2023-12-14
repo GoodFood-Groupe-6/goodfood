@@ -1,17 +1,27 @@
 "use client"
 
 import Loader from "@/components/Loader/Loader"
-import { useState, useEffect } from "react"
+import OnBoarding from "@/components/OnBoarding/OnBoarding"
+import { useEffect, useState } from "react"
 
 export default function Home() {
 
   const [loading, setLoading] = useState(true)
+  const [showOnBoarding, setShowOnBoarding] = useState(false)
 
   useEffect(() => {
     setTimeout(() => {
       setLoading(false)
     }, 250)
+
+    const onBoardingDone = localStorage.getItem('onBoardingDone')
+    setShowOnBoarding(!onBoardingDone)
   }, [])
+
+  const handleOnboardingComplete = () => {
+    localStorage.setItem('onBoardingDone', 'true')
+    setShowOnBoarding(false)
+  }
 
   if (loading) {
     return <Loader />
@@ -19,7 +29,13 @@ export default function Home() {
 
   return (
     <div>
-      <h1>Home</h1>
+      {showOnBoarding ? (
+        <OnBoarding onBoardingComplete={handleOnboardingComplete} />
+      ) : (
+        <>
+        <h1>Home</h1>
+        </>
+      )}
     </div>
   )
 }
