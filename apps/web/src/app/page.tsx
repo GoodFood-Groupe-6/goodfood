@@ -1,41 +1,49 @@
 "use client"
 
-import Loader from "@/components/Loader/Loader"
-import OnBoarding from "@/components/OnBoarding/OnBoarding"
-import { useEffect, useState } from "react"
+import { AnimatePresence, motion } from 'framer-motion';
+import Loader from "@/components/Loader/Loader";
+import OnBoarding from "@/components/OnBoarding/OnBoarding";
+import { useEffect, useState } from "react";
 
 export default function Home() {
-
-  const [loading, setLoading] = useState(true)
-  const [showOnBoarding, setShowOnBoarding] = useState(false)
+  const [loading, setLoading] = useState(true);
+  const [showOnBoarding, setShowOnBoarding] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
-      setLoading(false)
-    }, 250)
+      setLoading(false);
+    }, 2000);
 
-    const onBoardingDone = localStorage.getItem('onBoardingDone')
-    setShowOnBoarding(!onBoardingDone)
-  }, [])
+    const onBoardingDone = localStorage.getItem('onBoardingDone');
+    setShowOnBoarding(!onBoardingDone);
+  }, []);
 
   const handleOnboardingComplete = () => {
-    localStorage.setItem('onBoardingDone', 'true')
-    setShowOnBoarding(false)
-  }
-
-  if (loading) {
-    return <Loader />
-  }
+    localStorage.setItem('onBoardingDone', 'true');
+    setShowOnBoarding(false);
+  };
 
   return (
     <div>
+      <AnimatePresence>
+        {loading && (
+          <motion.div
+            initial={{ opacity: 1 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.1 }}
+          >
+            <Loader />
+          </motion.div>
+        )}
+      </AnimatePresence>
       {showOnBoarding ? (
         <OnBoarding onBoardingComplete={handleOnboardingComplete} />
       ) : (
         <>
-        <h1>Home</h1>
+          <h1>Home</h1>
         </>
       )}
     </div>
-  )
+  );
 }
