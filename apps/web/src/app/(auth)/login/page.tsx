@@ -5,7 +5,7 @@ import FacebookIcon from "@/assets/svg/facebook.svg"
 import TwitterIcon from "@/assets/svg/twitter.svg"
 import AppleIcon from "@/assets/svg/apple.svg"
 import Image from "next/image"
-
+import Link from "next/link"
 
 const Login = () => {
     return (
@@ -27,7 +27,7 @@ const Login = () => {
                     <div className="flex flex-col items-center">
                         <div>
                             <span className="text-base font-normal text-[#646982]">Don&apos;t have an account?</span>
-                            <a href="#" className="text-sm font-bold text-[#FF7622] ml-2.5 uppercase">Sign up</a>
+                            <Link href="/register" className="text-sm font-bold text-[#FF7622] ml-2.5 uppercase">Sign up</Link>
                         </div>
                         <span className="text-[#646982] text-base mt-7">Or</span>
                         <div className="flex gap-7 mt-4">

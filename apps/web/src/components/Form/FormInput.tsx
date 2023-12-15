@@ -12,7 +12,7 @@ const FormInput = ({
     placeholder?: string;
 }) => {
     return (
-        <div className="mb-4">
+        <div className="mb-6">
             <label htmlFor={name} className="text-sm font-normal text-[#32343E] uppercase">
                 {label}
             </label>
