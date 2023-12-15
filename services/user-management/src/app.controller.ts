@@ -1,12 +1,15 @@
-import { Controller, Get } from '@nestjs/common';
-import { AppService } from './app.service';
+import { Controller, Get, Inject } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(@Inject('USER_SERVICE') private readonly client: ClientProxy) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  async getUser() {
+    this.client.emit('test-user', 'test');
+    console.log(
+      'microservice user-management a envoyé un message à microservice admin',
+    );
+    return 'OK';
   }
 }

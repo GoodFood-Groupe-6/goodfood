@@ -9,10 +9,6 @@ async function bootstrap() {
     port: 5672,
     username: 'user',
     password: 'password',
-    locale: 'en_US',
-    frameMax: 0,
-    heartbeat: 0,
-    vhost: '/',
   };
 
   const app = await NestFactory.createMicroservice<MicroserviceOptions>(
