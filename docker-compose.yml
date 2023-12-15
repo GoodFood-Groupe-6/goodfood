@@ -10,22 +10,50 @@ services:
     environment:
       - RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}
       - RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}
+    networks:
+      - ms_admin_network
+      - ms_user_network
+  
+  gateway:
+    container_name: gateway
+    build:
+      context: ./services/gateway
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    networks:
+      - ms_admin_network
+      - ms_user_network
 
-  # ms-admin:
-  #   container_name: admin
-  #   build:
-  #     context: ./services/admin
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - 3000:3000
-  #   depends_on:
-  #     - rabbitmq
-  #   networks:
-  #     - mynetwork
+  ms-admin:
+    container_name: admin
+    build:
+      context: ./services/admin
+      dockerfile: Dockerfile
+    environment:
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+    networks:
+      - ms_admin_network
+
+  ms-user:
+    container_name: user
+    build:
+      context: ./services/user-management
+      dockerfile: Dockerfile
+    environment:
+      - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672
+    depends_on:
+      - rabbitmq
+    networks:
+      - ms_user_network
 
 volumes:
   rabbitmq_data:
 
 networks:
-  mynetwork:
+  ms_admin_network:
+    driver: bridge
+  ms_user_network:
     driver: bridge
