@@ -19,7 +19,7 @@ const Login = () => {
                             <input type="checkbox" id="remember" name="remember" className="mr-2.5 w-5 h-5" />
                             <label htmlFor="remember" className="text-sm font-normal text-[#7E8A97]">Remember me</label>
                         </div>
-                        <a href="#" className="text-sm font-normal text-[#FF7622]">Forgot password</a>
+                        <Link href="/forgot-password" className="text-sm font-normal text-[#FF7622]">Forgot password</Link>
                     </div>
                     <Button type="submit" className="mt-7">Log In</Button>
                 </form>

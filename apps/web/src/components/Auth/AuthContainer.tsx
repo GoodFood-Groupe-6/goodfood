@@ -6,11 +6,13 @@ import Back from '../Button/Back';
 const AuthContainer = ({
     pageTitle,
     pageDescription,
+    pageEmail,
     children,
     allowBack = false,
 }: {
     pageTitle: string,
     pageDescription: string,
+    pageEmail?: string,
     children: React.ReactNode,
     allowBack?: boolean,
 }) => {
@@ -29,6 +31,9 @@ const AuthContainer = ({
                     ) : null}
                     <h1 className="text-3xl font-bold">{pageTitle}</h1>
                     <span className='text-base'>{pageDescription}</span>
+                    {pageEmail ? (
+                        <span className='text-base font-bold'>{pageEmail}</span>
+                    ) : null}
                 </div>
             </div>
             <div className="relative bg-white -top-6 rounded-t-3xl h-auth-body p-6 pb-8">
