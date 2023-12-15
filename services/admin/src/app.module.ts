@@ -3,14 +3,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ClientsModule, Transport } from '@nestjs/microservices';
 
-const rmqUrl = {
-  protocol: 'amqp',
-  hostname: 'localhost',
-  port: 5672,
-  username: 'user',
-  password: 'password',
-};
-
 @Module({
   imports: [
     ClientsModule.register([
@@ -18,7 +10,7 @@ const rmqUrl = {
         name: 'USER_SERVICE',
         transport: Transport.RMQ,
         options: {
-          urls: [rmqUrl],
+          urls: ['amqp://user:password@localhost:5672'],
           queue: 'cats_queue',
           queueOptions: {
             durable: false,

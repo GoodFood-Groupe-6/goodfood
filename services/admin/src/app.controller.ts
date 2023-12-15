@@ -1,12 +1,13 @@
-import { Controller, Inject } from '@nestjs/common';
-import { ClientProxy, MessagePattern, Payload } from '@nestjs/microservices';
+import { Controller, Inject, Post } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
 
-@Controller('microservice')
+@Controller()
 export class AppController {
   constructor(@Inject('USER_SERVICE') private readonly client: ClientProxy) {}
 
-  @MessagePattern('test-user')
-  getTest(@Payload() data: string) {
-    console.log('microservice admin: ', data);
+  @Post()
+  sendHelloMessage(): string {
+    this.client.emit('test', 'coucou depuis admin');
+    return 'Message envoyé';
   }
 }

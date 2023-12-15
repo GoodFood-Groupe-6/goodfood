@@ -1,15 +1,13 @@
-import { Controller, Get, Inject } from '@nestjs/common';
-import { ClientProxy } from '@nestjs/microservices';
+import { Controller } from '@nestjs/common';
+import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 
 @Controller()
 export class AppController {
-  constructor(@Inject('USER_SERVICE') private readonly client: ClientProxy) {}
+  constructor() {}
 
-  async getUser() {
-    this.client.emit('test-user', 'test');
-    console.log(
-      'microservice user-management a envoyé un message à microservice admin',
-    );
-    return 'OK';
+  @EventPattern('test')
+  async hello(@Payload() data: string, @Ctx() context: RmqContext) {
+    console.log('Pattern -> ', context.getPattern());
+    console.log(data);
   }
 }
