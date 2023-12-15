@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { motion } from 'framer-motion';
+import Button from '../Button/Button';
 
 type Step = {
     title: string;
@@ -71,12 +72,9 @@ const OnBoarding: React.FC<OnBoardingProps> = ({ onBoardingComplete }) => {
                 </div>
             </div>
             <div className="flex flex-col w-full">
-                <button
-                    className="bg-[#ff7621] w-full rounded-xl uppercase py-5 text-white text-sm font-bold text-center"
-                    onClick={nextStep}
-                >
+                <Button onClick={nextStep}>
                     {isLastStep ? 'Get started' : 'Next'}
-                </button>
+                </Button>
                 <button className={`capitalize text-[#646982] mt-4 text-base ${isLastStep ? 'invisible' : 'visible'}`} onClick={onBoardingComplete}>
                     Skip
                 </button>

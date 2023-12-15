@@ -13,6 +13,9 @@ const config: Config = {
         'gradient-conic':
           'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
       },
+      height: {
+        'auth-body': 'calc(100vh - 13.5rem)'
+      },
     },
   },
   plugins: [],

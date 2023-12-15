@@ -4,6 +4,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Loader from "@/components/Loader/Loader";
 import OnBoarding from "@/components/OnBoarding/OnBoarding";
 import { useEffect, useState } from "react";
+import Link from 'next/link';
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,7 @@ export default function Home() {
       ) : (
         <>
           <h1>Home</h1>
+          <Link href="/login">Login</Link>
         </>
       )}
     </div>
