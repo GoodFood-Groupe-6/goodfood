@@ -1,14 +1,13 @@
 "use client"
 
-import { AnimatePresence, motion } from 'framer-motion';
+import CategoryHome from '@/components/Category/CategoryHome';
+import Header from '@/components/Header/Header';
 import Loader from "@/components/Loader/Loader";
 import OnBoarding from "@/components/OnBoarding/OnBoarding";
-import { useEffect, useState } from "react";
-import Link from 'next/link';
-import Header from '@/components/Header/Header';
-import Search from '@/components/Search/Search';
-import CategoryHome from '@/components/Category/CategoryHome';
 import RestaurantHome from '@/components/Restaurant/RestaurantHome';
+import Search from '@/components/Search/Search';
+import { AnimatePresence, motion } from 'framer-motion';
+import { useEffect, useState } from "react";
 
 export default function Home() {
   const [loading, setLoading] = useState(true);
