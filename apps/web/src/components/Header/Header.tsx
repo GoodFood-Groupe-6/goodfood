@@ -1,23 +1,35 @@
+"use client"
+
 import Link from "next/link"
 import BackIcon from "../../assets/svg/back.svg"
 import CartIcon from "../../assets/svg/cart.svg"
 import DownArrowIcon from "../../assets/svg/down-arrow.svg"
 import LeftArrowIcon from "../../assets/svg/left-arrow.svg"
 import MenuIcon from "../../assets/svg/menu.svg"
+import SelectDownIcon from "../../assets/svg/select-down.svg"
+import FilterIcon from "../../assets/svg/filter.svg"
 import Image from "next/image"
 import { motion } from "framer-motion"
+import Filter from "../Filtrer/Filter"
+import { useState } from "react"
+import CategoryListing from "../Category/CategoryListing"
 
 const Header = ({
     isSearchActive,
     closeSearch,
     headerType,
+    category,
     backUrl,
 }: {
     isSearchActive: boolean,
-    closeSearch: () => void,
+    closeSearch?: () => void,
     headerType?: string,
+    category?: string,
     backUrl?: string,
 }) => {
+    const [selectedButtons, setSelectedButtons] = useState({ offers: "", deliveryTimes: "", pricing: "" })
+
+    console.log(selectedButtons);
 
     const buttonVariants = {
         visible: { opacity: 1 },
@@ -31,11 +43,11 @@ const Header = ({
 
     if (headerType === 'cart') {
         return (
-            <header className="flex justify-between items-center pt-1 py-6">
+            <header className="flex justify-between items-center pt-1 px-6">
                 <div className="flex gap-[18px]">
                     <Link href={backUrl || "/"}>
                         <div className='flex justify-center items-center w-[45px] h-[45px] bg-[#ECF0F4] rounded-full'>
-                            <Image src={BackIcon} alt='left arrow icon' className='w-5' />
+                            <Image src={LeftArrowIcon} alt='left arrow icon' className='w-5' onClick={closeSearch} />
                         </div>
                     </Link>
                     <div className={`flex flex-col gap-[3px] justify-center`}>
@@ -47,6 +59,22 @@ const Header = ({
                         <span className='flex justify-center items-center text-[#FF7622] underline uppercase text-sm'>edit items</span>
                     </div>
                 </Link>
+            </header>
+        )
+    }
+
+    if (headerType === 'category') {
+        return (
+            <header className="flex justify-between items-center pt-1 px-6">
+                <div className="flex gap-[18px]">
+                    <Link href={backUrl || "/"}>
+                        <div className='flex justify-center items-center w-[45px] h-[45px] bg-[#ECF0F4] rounded-full'>
+                            <Image src={BackIcon} alt='left arrow icon' />
+                        </div>
+                    </Link>
+                    <CategoryListing />
+                </div>
+                <Filter setSelectedButtons={setSelectedButtons} />
             </header>
         )
     }

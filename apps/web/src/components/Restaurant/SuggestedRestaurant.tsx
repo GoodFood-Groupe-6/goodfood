@@ -3,9 +3,11 @@ import StartIcon from "../../assets/svg/star.svg";
 
 const SuggestedRestaurant = ({
     title,
-    imgUrl
+    rating,
+    imgUrl,
 }: {
     title: string,
+    rating: string,
     imgUrl: string
 }) => {
     return (
@@ -15,7 +17,7 @@ const SuggestedRestaurant = ({
                 <span className='text-[#32343E] capitalize'>{title}</span>
                 <div className='flex gap-1 items-center'>
                     <Image src={StartIcon} alt='star icon' className='w-4 h-4' />
-                    <span className='text-[#181C2E]'>4.7</span>
+                    <span className='text-[#181C2E]'>{rating}</span>
                 </div>
             </div>
         </div>

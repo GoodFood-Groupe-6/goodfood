@@ -4,7 +4,7 @@ import CategoryHome from '@/components/Category/CategoryHome';
 import Header from '@/components/Header/Header';
 import Loader from "@/components/Loader/Loader";
 import OnBoarding from "@/components/OnBoarding/OnBoarding";
-import RestaurantHome from '@/components/Restaurant/RestaurantHome';
+import RestaurantsCard from '@/components/Restaurant/RestaurantsCard';
 import Search from '@/components/Search/Search';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useEffect, useState } from "react";
@@ -38,6 +38,41 @@ export default function Home() {
     localStorage.setItem('onBoardingDone', 'true');
     setShowOnBoarding(false);
   };
+
+  const restaurants = [
+    {
+      id: '1',
+      name: 'Rose Garden Restaurant',
+      tags: 'Burger - Chiken - Riche - Wings',
+      rating: '4.7',
+      deliveryCost: 'Free',
+      deliveryTime: '20 min',
+    },
+    {
+      id: '2',
+      name: 'Cafenion Restaurant',
+      tags: 'Burger - Chiken - Riche - Wings',
+      rating: '4.7',
+      deliveryCost: 'Free',
+      deliveryTime: '20 min',
+    },
+    {
+      id: '3',
+      name: 'Kaji Firm Kitchen',
+      tags: 'Burger - Chiken - Riche - Wings',
+      rating: '4.7',
+      deliveryCost: 'Free',
+      deliveryTime: '20 min',
+    },
+    {
+      id: '4',
+      name: 'Kaba Restaurant',
+      tags: 'Burger - Chiken - Riche - Wings',
+      rating: '4.7',
+      deliveryCost: 'Free',
+      deliveryTime: '20 min',
+    },
+  ];
 
   return (
     <div>
@@ -73,7 +108,7 @@ export default function Home() {
                   <CategoryHome />
                 </div>
                 <div className='mt-8 px-6'>
-                  <RestaurantHome />
+                  <RestaurantsCard restaurants={restaurants} />
                 </div>
               </>
             )}

@@ -18,7 +18,7 @@ const Loader = () => {
     };
 
     return (
-        <div className="bg-white w-screen h-screen absolute top-0 left-0 z-50">
+        <div className="bg-white w-screen h-screen fixed top-0 left-0 z-50 overflow-hidden">
             <motion.div
                 className="absolute top-0 left-0"
                 variants={cornerVariants}

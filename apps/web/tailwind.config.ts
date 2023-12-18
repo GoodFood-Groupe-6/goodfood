@@ -16,6 +16,9 @@ const config: Config = {
       height: {
         'auth-body': 'calc(100vh - 13.5rem)'
       },
+      boxShadow: {
+        'product-card': '0px 8px 15px rgba(0, 0, 0, 0.2)',
+      }
     },
   },
   plugins: [],
