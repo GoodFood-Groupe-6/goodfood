@@ -13,6 +13,7 @@ import { motion } from "framer-motion"
 import Filter from "../Filtrer/Filter"
 import { useState } from "react"
 import CategoryListing from "../Category/CategoryListing"
+import MoreIcon from "../../assets/svg/more.svg"
 
 const Header = ({
     isSearchActive,
@@ -28,8 +29,6 @@ const Header = ({
     backUrl?: string,
 }) => {
     const [selectedButtons, setSelectedButtons] = useState({ offers: "", deliveryTimes: "", pricing: "" })
-
-    console.log(selectedButtons);
 
     const buttonVariants = {
         visible: { opacity: 1 },
@@ -75,6 +74,23 @@ const Header = ({
                     <CategoryListing />
                 </div>
                 <Filter setSelectedButtons={setSelectedButtons} />
+            </header>
+        )
+    }
+
+    if (headerType === 'restaurant') {
+        return (
+            <header className="flex justify-between items-center pt-1 px-6">
+                <div className="flex gap-[18px]">
+                    <Link href={backUrl || "/"}>
+                        <div className='flex justify-center items-center w-[45px] h-[45px] bg-white rounded-full'>
+                            <Image src={BackIcon} alt='left arrow icon' />
+                        </div>
+                    </Link>
+                </div>
+                <button className='flex justify-center items-center w-[45px] h-[45px] bg-white rounded-full relative'>
+                    <Image src={MoreIcon} alt='more icon' />
+                </button>
             </header>
         )
     }

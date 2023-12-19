@@ -1,0 +1,141 @@
+[{
+        "id": 100,
+        "title": "Burger Classique",
+        "price": "35.00",
+        "image": "BurgerImage",
+        "categoryId": 1
+    },
+    {
+        "id": 101,
+        "title": "Burger Deluxe",
+        "price": "40.00",
+        "image": "BurgerImage",
+        "categoryId": 1
+    },
+    {
+        "id": 102,
+        "title": "Burger Végétarien",
+        "price": "45.00",
+        "image": "BurgerImage",
+        "categoryId": 1
+    },
+    {
+        "id": 103,
+        "title": "Burger au Poulet",
+        "price": "50.00",
+        "image": "BurgerImage",
+        "categoryId": 1
+    },
+    {
+        "id": 104,
+        "title": "Burger Double",
+        "price": "55.00",
+        "image": "BurgerImage",
+        "categoryId": 1
+    },
+    {
+        "id": 200,
+        "title": "Sandwich Club",
+        "price": "35.00",
+        "image": "SandwichImage",
+        "categoryId": 2
+    },
+    {
+        "id": 201,
+        "title": "Sandwich Jambon-Fromage",
+        "price": "40.00",
+        "image": "SandwichImage",
+        "categoryId": 2
+    },
+    {
+        "id": 202,
+        "title": "Sandwich Poulet",
+        "price": "45.00",
+        "image": "SandwichImage",
+        "categoryId": 2
+    },
+    {
+        "id": 203,
+        "title": "Sandwich Végétarien",
+        "price": "50.00",
+        "image": "SandwichImage",
+        "categoryId": 2
+    },
+    {
+        "id": 204,
+        "title": "Sandwich Thon",
+        "price": "55.00",
+        "image": "SandwichImage",
+        "categoryId": 2
+    },
+    {
+        "id": 300,
+        "title": "Pizza Margherita",
+        "price": "35.00",
+        "image": "PizzaImage",
+        "categoryId": 3
+    },
+    {
+        "id": 301,
+        "title": "Pizza Pepperoni",
+        "price": "40.00",
+        "image": "PizzaImage",
+        "categoryId": 3
+    },
+    {
+        "id": 302,
+        "title": "Pizza Quatre Fromages",
+        "price": "45.00",
+        "image": "PizzaImage",
+        "categoryId": 3
+    },
+    {
+        "id": 303,
+        "title": "Pizza Végétarienne",
+        "price": "50.00",
+        "image": "PizzaImage",
+        "categoryId": 3
+    },
+    {
+        "id": 304,
+        "title": "Pizza Hawaienne",
+        "price": "55.00",
+        "image": "PizzaImage",
+        "categoryId": 3
+    },
+    {
+        "id": 400,
+        "title": "Kebab Classique",
+        "price": "35.00",
+        "image": "KebabImage",
+        "categoryId": 4
+    },
+    {
+        "id": 401,
+        "title": "Kebab au Poulet",
+        "price": "40.00",
+        "image": "KebabImage",
+        "categoryId": 4
+    },
+    {
+        "id": 402,
+        "title": "Kebab Végétarien",
+        "price": "45.00",
+        "image": "KebabImage",
+        "categoryId": 4
+    },
+    {
+        "id": 403,
+        "title": "Kebab Mixte",
+        "price": "50.00",
+        "image": "KebabImage",
+        "categoryId": 4
+    },
+    {
+        "id": 404,
+        "title": "Kebab Epicé",
+        "price": "55.00",
+        "image": "KebabImage",
+        "categoryId": 4
+    }
+]

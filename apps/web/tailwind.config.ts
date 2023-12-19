@@ -18,6 +18,9 @@ const config: Config = {
       },
       boxShadow: {
         'product-card': '0px 8px 15px rgba(0, 0, 0, 0.2)',
+      },
+      minHeight: {
+        'productTitle': '3rem'
       }
     },
   },

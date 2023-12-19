@@ -4,6 +4,7 @@ import Image from "next/image";
 import SelectDownIcon from "../../assets/svg/select-down.svg";
 import { useState } from "react";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 const CategoryListing = () => {
     const [showCategory, setShowCategory] = useState(false)
@@ -30,7 +31,12 @@ const CategoryListing = () => {
                 </div>
             </div>
             {showCategory && (
-                <>
+                <motion.div
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                >
                     <div className="fixed top-0 left-0 w-screen h-screen z-10" onClick={toggleCategory}></div>
                     <div className="absolute top-7 left-0 w-full bg-white border border-t-0 border-[#ECF0F4] shadow-category-card py-2.5 px-5 flex flex-col gap-1 rounded-bl-[22px] rounded-br-[22px] z-10">
                         {categories.map(category => (
@@ -41,7 +47,7 @@ const CategoryListing = () => {
                             </div>
                         ))}
                     </div>
-                </>
+                </motion.div>
             )}
         </div>
     );

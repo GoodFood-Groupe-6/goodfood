@@ -1,5 +1,6 @@
 import Image from "next/image";
-import StartIcon from "../../assets/svg/star.svg";
+import StarIcon from "../../assets/svg/star.svg";
+import Tag from "../Tag/Tag";
 
 const SuggestedRestaurant = ({
     title,
@@ -15,10 +16,7 @@ const SuggestedRestaurant = ({
             <div className={`w-[60px] h-[50px] min-h-[50px] min-w-[60px] bg-[#98A8B8] rounded-lg bg-cover`} style={{ backgroundImage: `url("${imgUrl}")` }}></div>
             <div className='flex flex-col gap-1'>
                 <span className='text-[#32343E] capitalize'>{title}</span>
-                <div className='flex gap-1 items-center'>
-                    <Image src={StartIcon} alt='star icon' className='w-4 h-4' />
-                    <span className='text-[#181C2E]'>{rating}</span>
-                </div>
+                <Tag type='star' value={rating} />
             </div>
         </div>
     );

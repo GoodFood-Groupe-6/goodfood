@@ -2,6 +2,7 @@ import Image from "next/image";
 import StarIcon from "../../assets/svg/star.svg"
 import DeliveryIcon from "../../assets/svg/delivery.svg"
 import ClockIcon from "../../assets/svg/clock.svg"
+import Tag from "../Tag/Tag";
 
 const RestaurantCard = ({
     name,
@@ -22,18 +23,9 @@ const RestaurantCard = ({
             <span className='text-d text-xl mt-2'>{name}</span>
             <span className='text-[#A0A5BA] text-sm'>{tags}</span>
             <div className='flex mt-2.5 items-center gap-6'>
-                <div className='flex gap-1'>
-                    <Image src={StarIcon} alt='star icon' />
-                    <span className='text-[#181C2E] font-bold'>{rating}</span>
-                </div>
-                <div className='flex gap-1'>
-                    <Image src={DeliveryIcon} alt='delivery icon' />
-                    <span className='text-[#181C2E]'>{deliveryCost}</span>
-                </div>
-                <div className='flex gap-1'>
-                    <Image src={ClockIcon} alt='clock icon' />
-                    <span className='text-[#181C2E]'>{deliveryTime}</span>
-                </div>
+                <Tag type='star' value={rating} bold={true} />
+                <Tag type='delivery' value={deliveryCost} />
+                <Tag type='clock' value={deliveryTime} />
             </div>
         </div>
     )
