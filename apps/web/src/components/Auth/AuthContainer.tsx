@@ -17,7 +17,7 @@ const AuthContainer = ({
     allowBack?: boolean,
 }) => {
     return (
-        <div className="bg-white h-screen w-screen relative">
+        <div className="bg-white h-screen w-screen relative lg:bg-[#121223]">
             <div className="w-full bg-[#121223] h-60">
                 <div className='relative'>
                     <Image src={AuthTopLeft} alt='loader top left' className='absolute top-0 left-0' />
@@ -29,14 +29,14 @@ const AuthContainer = ({
                             <Back href='/login' />
                         </div>
                     ) : null}
-                    <h1 className="text-3xl font-bold">{pageTitle}</h1>
-                    <span className='text-base'>{pageDescription}</span>
+                    <h1 className="text-3xl font-bold lg:text-4xl">{pageTitle}</h1>
+                    <span className='text-base lg:text-xl lg:mt-2'>{pageDescription}</span>
                     {pageEmail ? (
                         <span className='text-base font-bold'>{pageEmail}</span>
                     ) : null}
                 </div>
             </div>
-            <div className="relative bg-white -top-6 rounded-t-3xl h-auth-body p-6 pb-8">
+            <div className="relative bg-white -top-6 rounded-t-3xl lg:rounded-3xl h-auth-body lg:h-auto p-6 pb-8 lg:w-1/3 mx-auto">
                 {children}
             </div>
         </div>
