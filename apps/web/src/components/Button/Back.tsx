@@ -8,7 +8,7 @@ type ButtonProps = {
 };
 
 const Back: React.FC<ButtonProps> = ({ href, ...props }) => {
-    return <Link href={href} className="bg-white rounded-full w-11 h-11 flex items-center justify-center" {...props}>
+    return <Link href={href} className="bg-white rounded-full w-11 h-11 flex items-center justify-center lg:hidden" {...props}>
         <Image src={BackIcon} alt="back icon" className='' />
     </Link>;
 };
