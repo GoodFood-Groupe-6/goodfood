@@ -19,7 +19,7 @@ const RestaurantCard = ({
 }) => {
     return (
         <div className='flex flex-col'>
-            <div className='w-full h-32 bg-[#98A8B8] rounded-xl bg-[url("https://www.consofutur.com/wp-content/uploads/2017/09/nourriture_bio.jpg")] bg-cover bg-center'></div>
+            <div className='w-full h-32 bg-[#98A8B8] rounded-xl bg-[url("https://www.consofutur.com/wp-content/uploads/2017/09/nourriture_bio.jpg")] bg-cover bg-center lg:h-56'></div>
             <span className='text-d text-xl mt-2'>{name}</span>
             <span className='text-[#A0A5BA] text-sm'>{tags}</span>
             <div className='flex mt-2.5 items-center gap-6'>

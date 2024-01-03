@@ -20,15 +20,15 @@ const RestaurantsCard = ({
     return (
         <div className='flex flex-col justify-between gap-5'>
             <div className='flex justify-between'>
-                <span className='text-[#32343E] text-xl capitalize'>open restaurants</span>
+                <span className='text-[#32343E] text-xl capitalize lg:text-3xl'>open restaurants</span>
                 {seeAll && (
                     <div className='flex gap-2.5 justify-between items-center'>
-                        <Link href='/categories' className='text-[#333333] capitalize whitespace-nowrap'>see all</Link>
+                        <Link href='/categories' className='text-[#333333] capitalize whitespace-nowrap lg:text-xl'>see all</Link>
                         <Image src={RightArrowIcon} alt='right arrow' className='h-3' />
                     </div>
                 )}
             </div>
-            <div className='flex flex-col gap-7'>
+            <div className='flex flex-col gap-7 lg:grid lg:grid-cols-4 lg:gap-10'>
                 {restaurants.map((restaurant) => (
                     <Link href={`/restaurants/${restaurant.id}`} key={restaurant.id}>
                         <RestaurantCard

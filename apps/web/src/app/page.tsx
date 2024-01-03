@@ -108,7 +108,7 @@ export default function Home() {
                   <CategoryHome />
                 </div>
                 <div className='mt-8 px-6'>
-                  <RestaurantsCard restaurants={restaurants} />
+                  <RestaurantsCard restaurants={restaurants} seeAll={true} />
                 </div>
               </>
             )}
