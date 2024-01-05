@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: goodfood
+  name: ms-admin
+  labels:
+    io.kompose.service: ms-admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: ms-admin
+  template:
+    metadata:
+      labels:
+        io.kompose.service: ms-admin
+    spec:
+      containers:
+        - name: ms-admin
+          image: gregcesimaalsi23/goodfood-admin:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: RABBITMQ_URL
+              value: amqp://user:password@rabbitmq:5672
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 200m

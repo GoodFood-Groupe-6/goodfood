@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    io.kompose.service: ms-admin
+  name: ms-admin
+spec:
+  ports:
+    - name: "http"
+      port: 80
+      targetPort: 3000
+  selector:
+    io.kompose.service: ms-admin
+  type: ClusterIP
+status:
+  loadBalancer: {}

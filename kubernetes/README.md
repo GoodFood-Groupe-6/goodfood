@@ -37,13 +37,13 @@ https://kubernetes.io/docs/tutorials/hello-minikube/
 ### Expose admin
 
 ```sh
-kubectl expose deployment admin-deployment --type=LoadBalancer --port=3000
+kubectl expose deployment admin-deployment --namespace=goodfood --type=LoadBalancer --port=3000
 ```
 
 ### Lancer le service avec minikube
 
 ```sh
-minikube service admin-deployment
+minikube service admin-deployment -n goodfood
 ```
 
 ### Tester
