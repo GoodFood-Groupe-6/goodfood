@@ -4,6 +4,7 @@ metadata:
   labels:
     io.kompose.service: ms-admin
   name: ms-admin
+  namespace: goodfood
 spec:
   ports:
     - name: "http"
