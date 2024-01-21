@@ -1,51 +1,37 @@
 # goodfood
 
-## Minikube
+## Prérequis
 
-Installer minikube
+[OpenLens](https://github.com/MuhammedKalkan/OpenLens)
+[Docker Desktop](https://www.docker.com/products/docker-desktop/)
+[Activer l'extension Kubernetes](https://docs.docker.com/desktop/kubernetes/#install-and-turn-on-kubernetes)
 
-https://minikube.sigs.k8s.io/docs/start/
-
-Je me suis basé sur ce tuto
-
-https://kubernetes.io/docs/tutorials/hello-minikube/
-
-### Créer un namespace goodfood
+## Créer le namespace Goodfood
 
 ```sh
- kubectl create namespace goodfood
+kubectl create ns goodfood
 ```
-
-### Lancer admin
+## Lancer les différents fichiers Kubernetes
 
 ```sh
- cd ./kubernetes/admin && kubectl apply -f . -n goodfood
+kubectl apply -R -f ./kubernetes -n goodfood
+```
+## Récupérer les logs d'un pod
+Récupérer l'ensemble des informations du namespace
+```sh
+kubectl get all -o wide -n goodfood
+```
+Récupérer les logs pour un pod spécifique
+```sh
+kubectl get logs admin-deployment-6d886bbd7c-q54lw -n goodfood
 ```
 
-### Lancer rabbitmq
+## Faire communiquer le microservice user avec le microservice admin
+Faire une requête POST sur http://localhost:30001/
+ou via curl depuis un terminal. 
 
 ```sh
- cd ./kubernetes/rabbitmq && kubectl apply -f . -n goodfood
+curl -X POST http://localhost:30001/
 ```
 
-### Lancer user-management
-
-```sh
- cd ./kubernetes/user-management && kubectl apply -f . -n goodfood
-```
-
-### Expose admin
-
-```sh
-kubectl expose deployment admin-deployment --namespace=goodfood --type=LoadBalancer --port=3000
-```
-
-### Lancer le service avec minikube
-
-```sh
-minikube service admin-deployment -n goodfood
-```
-
-### Tester
-
-Appeler l'url en POST depuis Postman ou autre.
+PS : On peut communiquer directement avec le service car j'ai mis le type nodePort.
