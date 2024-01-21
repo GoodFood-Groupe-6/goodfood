@@ -38,7 +38,7 @@ spec:
     - name: "webadmin"
       port: 15672
       targetPort: 15672
-      nodePort: 30300
+      nodePort: 30002
     - name: "amqp"
       port: 5672
       targetPort: 5672
