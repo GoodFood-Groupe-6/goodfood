@@ -35,11 +35,9 @@ metadata:
   name: admin-service
   namespace: goodfood
 spec:
-  type: NodePort
   selector:
     app: admin
   ports:
     - name: "http"
       port: 3000
       targetPort: 3000
-      nodePort: 30201
