@@ -1,5 +1,5 @@
 # Stage 1: Build the app
-FROM node:lts-alpine AS build
+FROM --platform=linux/amd64,linux/arm64,linux/arm/v7 node:lts-alpine AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci --only=production
