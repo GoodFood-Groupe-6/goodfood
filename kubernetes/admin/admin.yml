@@ -1,0 +1,45 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: goodfood
+  name: admin-deployment
+  labels:
+    app: admin
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: admin
+  template:
+    metadata:
+      labels:
+        app: admin
+    spec:
+      containers:
+        - name: ms-admin
+          image: gregcesimaalsi23/goodfood-admin:arm64
+          ports:
+            - containerPort: 3000
+          env:
+            - name: RABBITMQ_URL
+              value: amqp://user:password@rabbitmq-service:5672
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: admin-service
+  namespace: goodfood
+spec:
+  type: NodePort
+  selector:
+    app: admin
+  ports:
+    - name: "http"
+      port: 3000
+      targetPort: 3000
+      nodePort: 30001
