@@ -1,4 +1,4 @@
-import { Controller, Inject, Post } from '@nestjs/common';
+import { Controller, Get, Inject, Post } from '@nestjs/common';
 import { ClientProxy } from '@nestjs/microservices';
 
 @Controller()
@@ -9,5 +9,10 @@ export class AppController {
   sendHelloMessage(): string {
     this.client.emit('test', 'coucou depuis admin');
     return 'Message envoyé';
+  }
+
+  @Get()
+  getHelloMessage(): string {
+    return 'Hello from admin service!';
   }
 }
