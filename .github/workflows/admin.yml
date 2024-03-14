@@ -23,7 +23,7 @@ jobs:
         with:
           context: ./services/admin
           push: true
-          tags: gregcesimaalsi23/goodfood-admin:amd64
+          tags: gregcesimaalsi23/goodfood-admin:latest
 
     # restart_aks_cluster_on_azure:
     #   runs-on: ubuntu-latest
