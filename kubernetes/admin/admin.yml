@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ms-admin
-          image: gregcesimaalsi23/goodfood-admin:amd64
+          image: gregcesimaalsi23/goodfood-admin:arm64
           ports:
             - containerPort: 3000
           env:
@@ -43,4 +43,3 @@ spec:
       port: 3000
       targetPort: 3000
       nodePort: 30001
-      
