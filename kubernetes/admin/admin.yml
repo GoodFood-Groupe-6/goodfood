@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ms-admin
-          image: gregcesimaalsi23/goodfood-admin:latest
+          image: gregcesimaalsi23/goodfood-admin:amd64
           ports:
             - containerPort: 3000
           env:
@@ -35,9 +35,12 @@ metadata:
   name: admin-service
   namespace: goodfood
 spec:
+  type: NodePort
   selector:
     app: admin
   ports:
     - name: "http"
       port: 3000
       targetPort: 3000
+      nodePort: 30001
+      

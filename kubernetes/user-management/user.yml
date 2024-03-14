@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: user-management
-          image: gregcesimaalsi23/goodfood-user-management:latest
+          image: gregcesimaalsi23/goodfood-user-management:amd64
           ports:
             - containerPort: 3000
           env:
@@ -28,11 +28,9 @@ metadata:
   name: user-service
   namespace: goodfood
 spec:
-  type: NodePort
   selector:
     app: user-management
   ports:
     - name: "http"
       port: 3000
       targetPort: 3000
-      nodePort: 30001
