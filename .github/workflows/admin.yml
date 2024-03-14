@@ -1,36 +1,39 @@
-name: Build Docker Images for Admin Service
+name: Build and Push Docker image and Restart Service
 
 on:
   push:
     branches:
-      - feat-github-actions
+      - test-greg-macos
 
 jobs:
-  build:
+  build_and_push_docker_image:
     runs-on: ubuntu-latest
-    environment: KUBERNETES
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and push
+      - name: Build and push Docker image
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./services/admin/Dockerfile
+          context: ./services/admin
           push: true
-          tags: gregcesimaalsi23/goodfood-admin:latest
+          tags: gregcesimaalsi23/goodfood-admin:amd64
 
-    strategy:
-      matrix:
-        service: [admin, user-management]
+    # restart_aks_cluster_on_azure:
+    #   runs-on: ubuntu-latest
+    #   steps:
+    #     - name: Azure Login
+    #       uses: azure/login@v1
+    #       with:
+    #         creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    #     - name: Restart AKS Cluster
+    #       run: |
+    #         az aks get-credentials --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --name ${{ secrets.AZURE_AKS_CLUSTER }}
+    #         kubectl rollout restart deployment {{ secretes.AZURE_AKS_DEPLOYMENT_NAME }} -n {{ secrets.AZURE_AKS_NAMESPACE }}
