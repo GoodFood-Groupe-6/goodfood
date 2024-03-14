@@ -7,7 +7,7 @@ export class AppController {
 
   @Post()
   sendHelloMessage(): string {
-    this.client.emit('test', 'coucou depuis admin');
+    this.client.emit('test', 'Ceci est une message de test');
     return 'Message envoyé';
   }
 
