@@ -18,12 +18,26 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Build and push Docker image
+      - name: Build and push Docker image with the latest tag
         uses: docker/build-push-action@v2
         with:
           context: ./services/admin
           push: true
           tags: gregcesimaalsi23/goodfood-admin:latest
+
+      - name: Build and push Docker image with the amd64 tag
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/admin
+          push: true
+          tags: gregcesimaalsi23/goodfood-admin:amd64
+
+      - name: Build and push Docker image with the arm64 tag
+        uses: docker/build-push-action@v2
+        with:
+          context: ./services/admin
+          push: true
+          tags: gregcesimaalsi23/goodfood-admin:arm64
 
     # restart_aks_cluster_on_azure:
     #   runs-on: ubuntu-latest
