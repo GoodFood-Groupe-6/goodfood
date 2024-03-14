@@ -3,7 +3,7 @@ name: Build and Push Docker image and Restart Service
 on:
   push:
     branches:
-      - main
+      - test-greg-macos
 
 jobs:
   build:
