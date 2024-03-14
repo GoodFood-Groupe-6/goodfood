@@ -3,7 +3,7 @@ name: Build and Push Docker image and Restart Service
 on:
   push:
     branches:
-      - test-greg-macos
+      - preprod
 
 jobs:
   build_and_push_docker_image:
@@ -11,12 +11,14 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
 
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v2
@@ -24,6 +26,7 @@ jobs:
           context: ./services/admin
           push: true
           tags: gregcesimaalsi23/goodfood-admin:amd64
+        if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true
 
     # restart_aks_cluster_on_azure:
     #   runs-on: ubuntu-latest
