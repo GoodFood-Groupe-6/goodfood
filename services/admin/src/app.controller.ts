@@ -14,6 +14,6 @@ export class AppController {
 
   @Get()
   getHelloMessage(): string {
-    return 'Hello from admin service 5!';
+    return 'Hello from admin service 6!';
   }
 }
