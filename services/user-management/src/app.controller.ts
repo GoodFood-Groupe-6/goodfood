@@ -7,7 +7,6 @@ export class AppController {
 
   @EventPattern('test')
   async hello(@Payload() data: string, @Ctx() context: RmqContext) {
-    console.log('Pattern -> ', context.getPattern());
     console.log(data);
   }
 }
