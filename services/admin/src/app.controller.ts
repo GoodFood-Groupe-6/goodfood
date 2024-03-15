@@ -7,12 +7,12 @@ export class AppController {
 
   @Post()
   sendHelloMessage(): string {
-    this.client.emit('test', 'Ceci est une message de test');
+    this.client.emit('test', 'test 15 mars');
     return 'Message envoyé';
   }
 
   @Get()
   getHelloMessage(): string {
-    return 'Hello from admin service 4!';
+    return 'Hello from admin service 5!';
   }
 }

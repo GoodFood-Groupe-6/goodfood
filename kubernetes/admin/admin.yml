@@ -17,7 +17,8 @@ spec:
     spec:
       containers:
         - name: ms-admin
-          image: gregcesimaalsi23/goodfood-admin:arm64
+          image: gregcesimaalsi23/goodfood-admin:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           env:

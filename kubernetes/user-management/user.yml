@@ -15,7 +15,8 @@ spec:
     spec:
       containers:
         - name: user-management
-          image: gregcesimaalsi23/goodfood-user-management:arm64
+          image: gregcesimaalsi23/goodfood-user-management:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 3000
           env:
