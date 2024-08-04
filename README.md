@@ -1,6 +1,6 @@
 # goodfood
 
-## l'équipe
+## Équipe
 
 - Maxime LEMOINE
 - Quentin SAVEAN
