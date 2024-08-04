@@ -1,0 +1,11 @@
+version: '3'
+services:
+  database:
+    container_name: user-database
+    image: postgres:16
+    volumes:
+      - ./user-data:/var/lib/postgresql/data
+    env_file:
+      - .env.docker
+    ports:
+      - 5432:5432
