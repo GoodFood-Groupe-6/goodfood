@@ -16,6 +16,7 @@ public class Product {
     @GeneratedValue
     private UUID id;
     private String name;
+    private String userId;
 
     public Product() {
     }
@@ -34,5 +35,13 @@ public class Product {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUser(String userId) {
+        this.userId = userId;
     }
 }
