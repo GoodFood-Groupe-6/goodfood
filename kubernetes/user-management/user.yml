@@ -1,27 +1,41 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: user-management-deployment
+  name: user-deployment
   namespace: goodfood
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: user-management
+      app: user
   template:
     metadata:
       labels:
-        app: user-management
+        app: user
     spec:
       containers:
-        - name: user-management
-          image: gregcesimaalsi23/goodfood-user-management:latest
+        - name: user
+          image: gregcesimaalsi23/goodfood-user:arm64
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
           env:
             - name: RABBITMQ_URL
               value: amqp://user:password@rabbitmq-service:5672
+            - name: DATABASE_URL
+              value: postgresql://postgres:root@localhost:5432/user?schema=public
+            - name: JWT_SECRET
+              value: rTjLKctZ6t3eGA
+        - name: database
+          image: postgres:16
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 5432
+          env:
+            - name: POSTGRES_PASSWORD
+              value: root
+            - name: POSTGRES_DB
+              value: user
 ---
 apiVersion: v1
 kind: Service
@@ -30,7 +44,7 @@ metadata:
   namespace: goodfood
 spec:
   selector:
-    app: user-management
+    app: user
   ports:
     - name: "http"
       port: 3000
