@@ -1,8 +1,4 @@
-import {
-  BadRequestException,
-  Injectable,
-  UnauthorizedException,
-} from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CreateLoginDto } from './dto/create-login.dto';
 import prisma from '../../prisma/prisma';
 import { User } from '@prisma/client';
@@ -14,7 +10,6 @@ export class LoginService {
   constructor(private jwtService: JwtService) {}
 
   async create(createLoginDto: CreateLoginDto) {
-    console.log(createLoginDto);
     const user: Partial<User> = await prisma.user.findUniqueOrThrow({
       where: {
         username: createLoginDto.username,
