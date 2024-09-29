@@ -1,4 +1,4 @@
-FROM openjdk:23-slim-bullseye
+FROM openjdk:21-slim-bullseye
 COPY . .
 CMD ["./mvnw", "spring-boot:run"]
 
