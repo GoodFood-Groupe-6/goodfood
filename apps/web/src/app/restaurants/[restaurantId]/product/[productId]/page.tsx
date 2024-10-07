@@ -1,3 +1,7 @@
+import ImageCarousel from "@/components/Restaurant/ImageCarouel";
+import Tag from "@/components/Tag/Tag";
+import RestaurantImage1 from "@/assets/images/restaurant1.jpg";
+
 const ProductPage = ({
     params
 }: {
@@ -7,13 +11,18 @@ const ProductPage = ({
     }
 }) => {
     console.log(params);
+    const images = [RestaurantImage1];
 
     return (
-        <div>
-            test
-            {/* <h1>Restaurant ID: {restaurantId}</h1>
-            <h2>Product ID: {productId}</h2> */}
-            {/* Contenu de la page du produit */}
+        <div className='h-screen'>
+            <ImageCarousel images={images} displayDots={false} />
+            <div className="p-6">
+                <div className="flex items-center gap-6">
+                    fef
+                </div>
+                <div className="mt-4">
+                </div>
+            </div>
         </div>
     );
 };

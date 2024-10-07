@@ -1,19 +1,19 @@
 "use client"
 
+import { motion } from "framer-motion"
+import Image from "next/image"
 import Link from "next/link"
+import { useState } from "react"
 import BackIcon from "../../assets/svg/back.svg"
 import CartIcon from "../../assets/svg/cart.svg"
 import DownArrowIcon from "../../assets/svg/down-arrow.svg"
 import LeftArrowIcon from "../../assets/svg/left-arrow.svg"
 import MenuIcon from "../../assets/svg/menu.svg"
-import SelectDownIcon from "../../assets/svg/select-down.svg"
-import FilterIcon from "../../assets/svg/filter.svg"
-import Image from "next/image"
-import { motion } from "framer-motion"
-import Filter from "../Filtrer/Filter"
-import { useState } from "react"
-import CategoryListing from "../Category/CategoryListing"
 import MoreIcon from "../../assets/svg/more.svg"
+import FavoriteEmptyIcon from "../../assets/svg/favorite-empty.svg"
+import FavoriteFullIcon from "../../assets/svg/favorite-full.svg"
+import CategoryListing from "../Category/CategoryListing"
+import Filter from "../Filtrer/Filter"
 
 const Header = ({
     isSearchActive,
@@ -90,6 +90,23 @@ const Header = ({
                 </div>
                 <button className='flex justify-center items-center w-[45px] h-[45px] bg-white rounded-full relative'>
                     <Image src={MoreIcon} alt='more icon' />
+                </button>
+            </header>
+        )
+    }
+
+    if (headerType === 'product') {
+        return (
+            <header className="flex justify-between items-center pt-1 px-6">
+                <div className="flex gap-[18px]">
+                    <Link href={backUrl || "/"}>
+                        <div className='flex justify-center items-center w-[45px] h-[45px] bg-white rounded-full'>
+                            <Image src={BackIcon} alt='left arrow icon' />
+                        </div>
+                    </Link>
+                </div>
+                <button className='flex justify-center items-center w-[45px] h-[45px] bg-white rounded-full relative'>
+                    <Image src={FavoriteFullIcon} alt='favorite icon' />
                 </button>
             </header>
         )
