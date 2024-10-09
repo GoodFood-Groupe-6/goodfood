@@ -10,28 +10,31 @@ import {
     StyleSheet,
     Text,
     TouchableOpacity,
-    View
+    View,
+    ActivityIndicator
 } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import { SafeAreaView } from 'react-native-safe-area-context';
-
-// Assume these SVG components are properly imported
+import BackSvg from '../assets/svg/back.svg';
 import DeliveryPointSVG from '../assets/svg/delivery-point.svg';
 import TargetSVG from '../assets/svg/target.svg';
 
-const GOOGLE_MAPS_API_KEY = 'AIzaSyDpPZwNdggN3f3YImqm8YpMt8X54eIebHE';
+const GOOGLE_MAPS_API_KEY = 'AIzaSyDU6xvBgVGvHHvjH7Abcs_lNSbVyBSQNW0';
 
 const TrackOrderScreen = () => {
     const navigation = useNavigation();
     const [userLocation, setUserLocation] = useState(null);
     const [driverLocation, setDriverLocation] = useState({
-        latitude: 49.434473,
-        longitude: 1.077031,
+        // latitude: 49.434473,
+        // longitude: 1.077031,
+        latitude: 49.47235419995533,
+        longitude: 1.1224878663997868,
     });
     const [routeCoordinates, setRouteCoordinates] = useState([]);
     const [initialRegion, setInitialRegion] = useState(null);
     const [estimatedTime, setEstimatedTime] = useState(20);
-    const [isTracking, setIsTracking] = useState(true);
+    const [isTracking, setIsTracking] = useState(false);
+    const [isMapLoading, setIsMapLoading] = useState(true);
 
     const mapRef = useRef(null);
     const routeIndex = useRef(0);
@@ -61,7 +64,7 @@ const TrackOrderScreen = () => {
                     springAnimation(
                         panY._value >
                             orderInfoHeight +
-                                (fullInfoHeight - orderInfoHeight) / 2
+                            (fullInfoHeight - orderInfoHeight) / 2
                             ? fullInfoHeight
                             : orderInfoHeight
                     );
@@ -169,18 +172,24 @@ const TrackOrderScreen = () => {
     return (
         <SafeAreaView style={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity onPress={() => navigation.goBack()}>
-                    <MaterialIcons name="arrow-back" size={24} color="black" />
+                <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
+                    <BackSvg width={10} height={17} />
                 </TouchableOpacity>
-                <Text style={styles.headerTitle}>Track Order</Text>
+                <Text style={styles.title}>Track Order</Text>
             </View>
 
             <View style={styles.mapContainer}>
+                {isMapLoading && (
+                    <View style={styles.loaderContainer}>
+                        <ActivityIndicator size="large" color="#FF7622" />
+                    </View>
+                )}
                 {userLocation && initialRegion && (
                     <MapView
                         ref={mapRef}
                         style={styles.map}
                         initialRegion={initialRegion}
+                        onMapReady={() => setIsMapLoading(false)}
                     >
                         <Marker coordinate={userLocation}>
                             <CustomMarker svg={TargetSVG} />
@@ -242,7 +251,7 @@ const TrackOrderScreen = () => {
                                 style={[
                                     styles.statusDot,
                                     status.completed &&
-                                        styles.statusDotCompleted,
+                                    styles.statusDotCompleted,
                                 ]}
                             />
                             {index !== orderStatus.length - 1 && (
@@ -250,7 +259,7 @@ const TrackOrderScreen = () => {
                                     style={[
                                         styles.statusLine,
                                         orderStatus[index + 1].completed &&
-                                            styles.statusLineCompleted,
+                                        styles.statusLineCompleted,
                                     ]}
                                 />
                             )}
@@ -258,7 +267,7 @@ const TrackOrderScreen = () => {
                                 style={[
                                     styles.statusText,
                                     status.completed &&
-                                        styles.statusTextCompleted,
+                                    styles.statusTextCompleted,
                                 ]}
                             >
                                 {status.text}
@@ -361,13 +370,33 @@ const getRegionForCoordinates = (
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'transparent',
         position: 'relative',
     },
     header: {
         flexDirection: 'row',
         alignItems: 'center',
-        padding: 16,
+        padding: 20,
+        position: 'absolute',
+        top: 50,
+        left: 0,
+        right: 0,
+        zIndex: 1000,
+    },
+    backButton: {
+        padding: 10,
+        backgroundColor: '#ECF0F4',
+        borderRadius: 50,
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 40,
+        height: 40,
+    },
+    title: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginLeft: 20,
+        color: 'white',
     },
     headerTitle: {
         fontSize: 18,
@@ -389,7 +418,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20,
-        padding: 20,
+        // padding: 20,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,
@@ -400,12 +429,12 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     pullBar: {
-        width: 40,
-        height: 5,
+        width: 70,
+        height: 6,
         backgroundColor: '#D0D0D0',
         borderRadius: 3,
         alignSelf: 'center',
-        marginBottom: 10,
+        marginTop: 10,
     },
     orderInfoContent: {
         padding: 20,
@@ -413,6 +442,9 @@ const styles = StyleSheet.create({
     orderInfo: {
         flexDirection: 'row',
         marginBottom: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
+        paddingTop: 20,
     },
     restaurantImage: {
         width: 60,
@@ -451,6 +483,8 @@ const styles = StyleSheet.create({
     },
     statusContainer: {
         marginBottom: 20,
+        paddingLeft: 20,
+        paddingRight: 20,
     },
     statusItem: {
         flexDirection: 'row',
@@ -489,9 +523,11 @@ const styles = StyleSheet.create({
     courierContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        backgroundColor: '#F5F5F5',
-        borderRadius: 10,
-        padding: 15,
+        borderWidth: 1,
+        borderColor: '#E8E8E8',
+        padding: 30,
+        borderTopRightRadius: 25,
+        borderTopLeftRadius: 25,
     },
     courierImage: {
         width: 50,
@@ -524,6 +560,16 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 40,
         height: 40,
+    },
+    loaderContainer: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(255, 255, 255, 0.8)',
     },
 });
 

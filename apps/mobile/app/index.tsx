@@ -78,7 +78,7 @@ const HomeScreen = () => {
     ];
 
     const handleSearchPress = () => {
-        router.push('trackorder');
+        router.push('search');
     };
 
     return (
@@ -86,7 +86,7 @@ const HomeScreen = () => {
             <ScrollView>
                 <View style={styles.header}>
                     <View style={styles.locationContainer}>
-                        <TouchableOpacity style={styles.menuButton}>
+                        <TouchableOpacity style={styles.menuButton} onPress={() => router.push('/(profile)/menu')}>
                             <MenuSvg style={styles.menuIcon} />
                         </TouchableOpacity>
                         <View style={styles.locationInfo}>
@@ -110,7 +110,7 @@ const HomeScreen = () => {
                 <View style={styles.categoriesSection}>
                     <View style={styles.sectionHeader}>
                         <Text style={styles.sectionTitle}>All Categories</Text>
-                        <TouchableOpacity style={styles.seeAllButton}>
+                        <TouchableOpacity style={styles.seeAllButton} onPress={() => router.push('/(delivery)')}>
                             <Text style={styles.seeAllText}>See All</Text>
                             <RightArrowSvg style={styles.rightArrow} />
                         </TouchableOpacity>
