@@ -78,7 +78,7 @@ const HomeScreen = () => {
     ];
 
     const handleSearchPress = () => {
-        router.push('search');
+        router.push('trackorder');
     };
 
     return (

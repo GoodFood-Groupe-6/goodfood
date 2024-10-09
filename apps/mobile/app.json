@@ -31,10 +31,9 @@
     "plugins": [
       "expo-router",
       [
-        "@rnmapbox/maps",
+        "expo-location",
         {
-          "RNMapboxMapsVersion": "11.1.0",
-          "RNMapboxMapsDownloadToken": "pk.eyJ1IjoibG1ubWF4aW1lIiwiYSI6ImNtMjB6Nm53aDBsNXAybHIybzFzdXNwbDAifQ.rcT5xCGlu303SaOyIvpHOQ"
+          "locationAlwaysAndWhenInUsePermission": "Allow $(PRODUCT_NAME) to use your location."
         }
       ]
     ],
