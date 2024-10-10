@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import React, { useState, useRef, useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Modal, Dimensions, SafeAreaView } from 'react-native';
+import { ScrollView, StyleSheet, Text, TouchableOpacity, View, Modal, Dimensions, SafeAreaView, Button } from 'react-native';
 import MapView, { Marker, Polyline } from 'react-native-maps';
 import * as Location from 'expo-location';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -11,14 +11,26 @@ const DeliveryDashboardScreen = () => {
     const [showMap, setShowMap] = useState(false);
     const [userLocation, setUserLocation] = useState(null);
     const [restaurantLocation, setRestaurantLocation] = useState({
+        latitude: 49.47707701398069,
+        longitude: 1.1084849658602514,
+    });
+    const [customerLocation, setCustomerLocation] = useState({
+        // latitude: 49.47235419995533,
+        // longitude: 1.1224878663997868,
         latitude: 49.434473,
         longitude: 1.077031,
     });
-    const [customerLocation, setCustomerLocation] = useState({
-        latitude: 49.47235419995533,
-        longitude: 1.1224878663997868,
-    });
-    const [routeCoordinates, setRouteCoordinates] = useState([]);
+    const [routeToRestaurant, setRouteToRestaurant] = useState([]);
+    const [routeToCustomer, setRouteToCustomer] = useState([]);
+    const [estimatedTotalTime, setEstimatedTotalTime] = useState(0);
+    const [orderAccepted, setOrderAccepted] = useState(false);
+    const [currentStep, setCurrentStep] = useState('toRestaurant');
+    const [currentRoute, setCurrentRoute] = useState([]);
+    const [nextInstruction, setNextInstruction] = useState('');
+    const [isTracking, setIsTracking] = useState(false);
+    const routeIndex = useRef(0);
+    const intervalRef = useRef(null);
+    const [navigationSteps, setNavigationSteps] = useState({ toRestaurant: [], toCustomer: [] });
 
     const mapRef = useRef(null);
 
@@ -31,6 +43,7 @@ const DeliveryDashboardScreen = () => {
             }
 
             let location = await Location.getCurrentPositionAsync({});
+
             setUserLocation({
                 latitude: location.coords.latitude,
                 longitude: location.coords.longitude,
@@ -38,20 +51,53 @@ const DeliveryDashboardScreen = () => {
         })();
     }, []);
 
-    const fetchRoute = async (start: never, end: { latitude: any; longitude: any; }) => {
-        const GOOGLE_MAPS_API_KEY = 'YOUR_API_KEY_HERE';
+    const fetchRoute = async (start, end) => {
+        const GOOGLE_MAPS_API_KEY = 'AIzaSyDU6xvBgVGvHHvjH7Abcs_lNSbVyBSQNW0';
         const url = `https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&key=${GOOGLE_MAPS_API_KEY}`;
 
         try {
             const response = await fetch(url);
             const json = await response.json();
             if (json.routes && json.routes.length > 0) {
-                const points = json.routes[0].overview_polyline.points;
+                const route = json.routes[0];
+                const points = route.overview_polyline.points;
                 const decodedPoints = decodePolyline(points);
-                setRouteCoordinates(decodedPoints);
+                const steps = route.legs[0].steps.map(step => ({
+                    instruction: step.html_instructions,
+                    distance: step.distance.text,
+                    duration: step.duration.text,
+                    startLocation: step.start_location,
+                    endLocation: step.end_location
+                }));
+                return {
+                    coordinates: decodedPoints,
+                    steps: steps,
+                    duration: route.legs[0].duration.value // durée en secondes
+                };
             }
         } catch (error) {
             console.error('Error fetching route:', error);
+        }
+        return { coordinates: [], steps: [], duration: 0 };
+    };
+
+    const fetchBothRoutes = async () => {
+        if (userLocation) {
+            const toRestaurant = await fetchRoute(userLocation, restaurantLocation);
+            const toCustomer = await fetchRoute(restaurantLocation, customerLocation);
+            setRouteToRestaurant(toRestaurant.coordinates);
+            setRouteToCustomer(toCustomer.coordinates);
+
+            // Calculate estimated total time
+            const preparationTime = 15 * 60; // 15 minutes in seconds
+            const totalTime = Math.round((preparationTime + toRestaurant.duration + toCustomer.duration) / 60);
+            setEstimatedTotalTime(totalTime);
+
+            // Store steps for navigation
+            setNavigationSteps({
+                toRestaurant: toRestaurant.steps,
+                toCustomer: toCustomer.steps
+            });
         }
     };
 
@@ -92,12 +138,158 @@ const DeliveryDashboardScreen = () => {
         return poly;
     };
 
+    const calculateTravelTime = (route) => {
+        // Assuming average speed of 30 km/h
+        const totalDistance = route.reduce((acc, coord, index) => {
+            if (index === 0) return 0;
+            return acc + getDistance(route[index - 1], coord);
+        }, 0);
+        return Math.round((totalDistance / 30) * 60); // Convert to minutes
+    };
+
+    const getDistance = (start, end) => {
+        // Haversine formula to calculate distance between two points
+        const R = 6371; // Radius of the Earth in km
+        const dLat = (end.latitude - start.latitude) * Math.PI / 180;
+        const dLon = (end.longitude - start.longitude) * Math.PI / 180;
+        const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+                  Math.cos(start.latitude * Math.PI / 180) * Math.cos(end.latitude * Math.PI / 180) *
+                  Math.sin(dLon/2) * Math.sin(dLon/2);
+        const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        return R * c;
+    };
+
     const handleAccept = (order: number) => {
         setShowMap(true);
-        // Fetch route when accepting an order
-        if (userLocation) {
-            fetchRoute(userLocation, restaurantLocation);
+        fetchBothRoutes();
+    };
+
+    const confirmOrder = () => {
+        setOrderAccepted(true);
+        // Here you would typically send a confirmation to your backend
+        console.log("Order confirmed and accepted by the delivery person");
+    };
+
+    const simulateDriverMovement = () => {
+        let newDriverLocation;
+        if (currentStep === 'toRestaurant' && routeToRestaurant.length > 0 && routeIndex.current < routeToRestaurant.length - 1) {
+            routeIndex.current += 1;
+            newDriverLocation = routeToRestaurant[routeIndex.current];
+        } else if (currentStep === 'toCustomer' && routeToCustomer.length > 0 && routeIndex.current < routeToCustomer.length - 1) {
+            routeIndex.current += 1;
+            newDriverLocation = routeToCustomer[routeIndex.current];
         }
+
+        if (newDriverLocation) {
+            setUserLocation(newDriverLocation);
+            checkProgress(newDriverLocation);
+        }
+    };
+
+    useEffect(() => {
+        if (isTracking) {
+            intervalRef.current = setInterval(simulateDriverMovement, 500);
+        } else {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        }
+
+        return () => {
+            if (intervalRef.current) {
+                clearInterval(intervalRef.current);
+            }
+        };
+    }, [isTracking, currentStep]);
+
+    const startNavigation = () => {
+        if (currentStep === 'toRestaurant') {
+            setCurrentRoute(routeToRestaurant);
+            setNextInstruction("Dirigez-vous vers le restaurant");
+        } else {
+            setCurrentRoute(routeToCustomer);
+            setNextInstruction("Dirigez-vous vers le client");
+        }
+        routeIndex.current = 0;
+        setIsTracking(true);
+    };
+
+    const startLocationTracking = () => {
+        Location.watchPositionAsync(
+            {
+                accuracy: Location.Accuracy.High,
+                timeInterval: 5000,
+                distanceInterval: 10,
+            },
+            (location) => {
+                updateUserLocation(location.coords);
+                checkProgress(location.coords);
+            }
+        );
+    };
+
+    const updateUserLocation = (coords) => {
+        setUserLocation({
+            latitude: coords.latitude,
+            longitude: coords.longitude,
+        });
+    };
+
+    const checkProgress = (currentCoords) => {
+        const destination = currentStep === 'toRestaurant' ? restaurantLocation : customerLocation;
+        // console.log("Destination:", destination);
+        const distance = getDistance(currentCoords, destination);
+        
+        if (distance < 0.1) { // Si moins de 100 mètres
+            if (currentStep === 'toRestaurant') {
+                setCurrentStep('toCustomer');
+                setCurrentRoute(routeToCustomer);
+                setNextInstruction("Vous êtes arrivé au restaurant. Dirigez-vous maintenant vers le client.");
+                routeIndex.current = 0; // Réinitialiser l'index pour la nouvelle route
+            } else {
+                setNextInstruction("Vous êtes arrivé à destination.");
+                setIsTracking(false); // Arrêter le suivi
+            }
+        } else {
+            updateNavigationInstructions(currentCoords);
+        }
+    };
+
+    const updateNavigationInstructions = (currentCoords) => {
+        const steps = currentStep === 'toRestaurant' ? navigationSteps.toRestaurant : navigationSteps.toCustomer;
+        console.log("Steps:", steps);
+        if (steps.length === 0) {
+            setNextInstruction("Chargement des instructions...");
+            return;
+        }
+
+        // Trouver l'étape la plus proche
+        let closestStep = steps[0];
+        let minDistance = Infinity;
+
+        steps.forEach(step => {
+            const distanceToStart = getDistance(currentCoords, step.startLocation);
+            const distanceToEnd = getDistance(currentCoords, step.endLocation);
+            const minStepDistance = Math.min(distanceToStart, distanceToEnd);
+
+            if (minStepDistance < minDistance) {
+                minDistance = minStepDistance;
+                closestStep = step;
+            }
+        });
+
+        // Si on est proche de la fin de l'étape, prendre l'instruction suivante
+        const distanceToEnd = getDistance(currentCoords, closestStep.endLocation);
+        const indexOfClosestStep = steps.indexOf(closestStep);
+        
+        if (distanceToEnd < 0.05 && indexOfClosestStep < steps.length - 1) { // 50 mètres
+            setNextInstruction(steps[indexOfClosestStep + 1].instruction);
+        } else {
+            setNextInstruction(closestStep.instruction);
+        }
+
+        // console.log("Current instruction:", closestStep.instruction);
+        // console.log("Distance to end of current step:", distanceToEnd);
     };
 
     return (
@@ -215,17 +407,59 @@ const DeliveryDashboardScreen = () => {
                             <Icon name="map-marker" size={30} color="#FBBC05" />
                         </Marker>
                         <Polyline
-                            coordinates={routeCoordinates}
+                            coordinates={routeToRestaurant}
                             strokeColor="#4285F4"
                             strokeWidth={3}
                         />
+                        <Polyline
+                            coordinates={routeToCustomer}
+                            strokeColor="#EA4335"
+                            strokeWidth={3}
+                        />
+                        {orderAccepted && (
+                            <Polyline
+                                coordinates={currentRoute}
+                                strokeColor="#4285F4"
+                                strokeWidth={5}
+                            />
+                        )}
                     </MapView>
+                    <View style={styles.orderInfoOverlay}>
+                        <Text style={styles.estimatedTimeText}>
+                            Temps de livraison estimé: {estimatedTotalTime} minutes
+                        </Text>
+                        {!orderAccepted && (
+                            <Button
+                                title="Confirmer la prise en charge"
+                                onPress={confirmOrder}
+                                color="#FF6C44"
+                            />
+                        )}
+                        {orderAccepted && (
+                            <Text style={styles.orderAcceptedText}>
+                                Commande prise en charge
+                            </Text>
+                        )}
+                    </View>
                     <TouchableOpacity
                         style={styles.closeButton}
-                        onPress={() => setShowMap(false)}
+                        onPress={() => {
+                            setShowMap(false);
+                            setIsTracking(false);
+                        }}
                     >
-                        <Text style={styles.closeButtonText}>Close</Text>
+                        <Text style={styles.closeButtonText}>Fermer</Text>
                     </TouchableOpacity>
+                    {orderAccepted && (
+                        <View style={styles.navigationOverlay}>
+                            <Text style={styles.instructionText}>{nextInstruction}</Text>
+                            <Button
+                                title={isTracking ? "Arrêter la navigation" : "Commencer la navigation"}
+                                onPress={() => setIsTracking(!isTracking)}
+                                color="#FF6C44"
+                            />
+                        </View>
+                    )}
                 </View>
             </Modal>
         </SafeAreaView>
@@ -464,6 +698,39 @@ const styles = StyleSheet.create({
     closeButtonText: {
         color: 'white',
         fontWeight: 'bold',
+    },
+    orderInfoOverlay: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        right: 20,
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 10,
+        elevation: 5,
+    },
+    estimatedTimeText: {
+        fontSize: 16,
+        marginBottom: 10,
+    },
+    orderAcceptedText: {
+        fontSize: 16,
+        color: 'green',
+        fontWeight: 'bold',
+    },
+    navigationOverlay: {
+        position: 'absolute',
+        bottom: 20,
+        left: 20,
+        right: 20,
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 10,
+        elevation: 5,
+    },
+    instructionText: {
+        fontSize: 16,
+        marginBottom: 10,
     },
 });
 
