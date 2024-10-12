@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: goodfood
+  name: order-deployment
+  labels:
+    app: order
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: ms-order
+          image: gregcesimaalsi23/goodfood-order:amd64
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          env:
+            - name: RABBITMQ_URL
+              value: amqp://user:password@rabbitmq-service:5672
+            - name: DATABASE_URL
+              value: postgres://postgres:root@localhost:5432/orders
+          resources:
+            limits:
+              cpu: 500m
+            requests:
+              cpu: 200m
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-service
+  namespace: goodfood
+spec:
+  type: NodePort
+  selector:
+    app: order
+  ports:
+    - name: "http"
+      port: 3000
+      targetPort: 3000
+      nodePort: 30004
