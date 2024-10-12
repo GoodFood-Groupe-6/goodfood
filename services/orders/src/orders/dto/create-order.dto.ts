@@ -1,11 +1,11 @@
-import { IsString, IsNotEmpty } from "class-validator";
-import {Order} from "../entities/order.entity";
+import { IsString, IsNotEmpty } from 'class-validator';
+import { Order } from '../entities/order.entity';
 
 export class CreateOrderDto {
-    @IsNotEmpty()
-    orders: Array<Order>;
+  @IsNotEmpty()
+  orders: Array<Order>;
 
-    @IsString()
-    @IsNotEmpty()
-    address: string;
+  @IsString()
+  @IsNotEmpty()
+  address: string;
 }
