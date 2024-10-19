@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { CreateRegisterDto } from './dto/create-register.dto';
 import prisma from '../../prisma/prisma';
-import { User, UserRoles } from '@prisma/client';
+import { User } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -17,7 +17,7 @@ export class RegisterService {
         lastname: createRegisterDto.lastname.toUpperCase(),
         username: createRegisterDto.username,
         password: hash,
-        role: createRegisterDto.role as UserRoles,
+        role: createRegisterDto.role,
       },
     });
   }

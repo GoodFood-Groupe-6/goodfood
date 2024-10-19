@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: user
-          image: gregcesimaalsi23/goodfood-user:arm64
+          image: gregcesimaalsi23/goodfood-user:amd64
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
@@ -23,7 +23,7 @@ spec:
             - name: RABBITMQ_URL
               value: amqp://user:password@rabbitmq-service:5672
             - name: DATABASE_URL
-              value: postgresql://postgres:root@localhost:5432/user?schema=public
+              value: sqlserver://srv-database-test.database.windows.net:1433;database=db-test;user=srv-database-test@srv-database-test;password={DGi5LysxiquJTH};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
             - name: JWT_SECRET
               value: rTjLKctZ6t3eGA
         - name: database

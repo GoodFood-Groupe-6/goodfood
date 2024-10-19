@@ -1,11 +1,12 @@
-version: '3'
 services:
   database:
     container_name: user-database
-    image: postgres:16
+    image: mcr.microsoft.com/mssql/server:2022-latest
     volumes:
       - ./user-data:/var/lib/postgresql/data
-    env_file:
-      - .env.docker
+    environment:
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password
+      - ACCEPT_EULA=Y
     ports:
-      - 5432:5432
+      - "1433:1433"
+    hostname: mssql-srv

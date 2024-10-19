@@ -1,5 +1,3 @@
-# We strongly recommend using the required_providers block to set the
-# Azure Provider source and version being used
 terraform {
   required_providers {
     azurerm = {
@@ -10,41 +8,55 @@ terraform {
       source  = "kreuzwerker/docker"
       version = "2.16.0"
     }
+    kubernetes = {
+      source  = "hashicorp/kubernetes"
+      version = "2.13.1"
+    }
   }
 }
 
-# Configure the Microsoft Azure Provider
 provider "azurerm" {
-  features {
-    resource_group {
-      prevent_deletion_if_contains_resources = false
-    }
-  }
+  features {}
   subscription_id = "45d7da20-4245-402a-9624-ee07e1a43d2e"
   tenant_id = "190ce420-b157-44ae-bc2f-69563baa5a3b"
 }
 
-provider "docker" {
-  registry_auth {
-    address  = azurerm_container_registry.acr.login_server
-    username = azurerm_container_registry.acr.admin_username
-    password = azurerm_container_registry.acr.admin_password
-  }
+provider "kubernetes" {
+  host                   = azurerm_kubernetes_cluster.aks-goodfood.kube_config.0.host
+  client_certificate     = base64decode(azurerm_kubernetes_cluster.aks-goodfood.kube_config.0.client_certificate)
+  client_key             = base64decode(azurerm_kubernetes_cluster.aks-goodfood.kube_config.0.client_key)
+  cluster_ca_certificate = base64decode(azurerm_kubernetes_cluster.aks-goodfood.kube_config.0.cluster_ca_certificate)
 }
 
-# Création du groupe de ressources
 resource "azurerm_resource_group" "rg-goodfood" {
   name     = "rg-goodfood"
   location = "westeurope"
 }
 
-# Création du cluster AKS
+resource "azurerm_mssql_server" "mssql-srv" {
+  name                         = "goodfood-db-srv"
+  resource_group_name          = azurerm_resource_group.rg-goodfood.name
+  location                     = "francecentral"
+  version                      = "12.0"
+  administrator_login          = "4dm1n157r470r"
+  administrator_login_password = "4-v3ry-53cr37-p455w0rd"
+}
+
+resource "azurerm_mssql_database" "db-user" {
+  name                 = "user"
+  server_id            = azurerm_mssql_server.mssql-srv.id
+  collation            = "SQL_Latin1_General_CP1_CI_AS"
+  license_type         = "LicenseIncluded"
+  max_size_gb          = 2
+  sku_name             = "S0"
+  enclave_type         = "VBS"
+}
+
 resource "azurerm_kubernetes_cluster" "aks-goodfood" {
   name                = "aks-goodfood"
   location            = azurerm_resource_group.rg-goodfood.location
   resource_group_name = azurerm_resource_group.rg-goodfood.name
   dns_prefix          = "aks-goodfood-dns"
-  sku_tier            = "Standard"
 
   default_node_pool {
     name       = "default"
@@ -61,20 +73,60 @@ resource "azurerm_kubernetes_cluster" "aks-goodfood" {
   }
 }
 
-# Configuration du service Azure Container Registry (ACR) pour stocker les images Docker
-resource "azurerm_container_registry" "acr-goodfood" {
-  name                = "acrgoodfood"
-  resource_group_name = azurerm_resource_group.rg-goodfood.name
-  location            = azurerm_resource_group.rg-goodfood.location
-  sku                 = "Basic"
-  admin_enabled       = true
+resource "kubernetes_namespace" "goodfood_namespace" {
+  metadata {
+    name = "goodfood"
+  }
 }
 
-# Attribution d'un rôle au cluster AKS pour qu'il puisse tirer des images du registre ACR
-resource "azurerm_role_assignment" "aks_acr_pull" {
-  principal_id                   = azurerm_kubernetes_cluster.aks-goodfood.identity[0].principal_id
-  role_definition_name           = "AcrPull"
-  scope                          = azurerm_container_registry.acr-goodfood.id
-}
+resource "kubernetes_deployment" "deployment-user" {
+  metadata {
+    name = "user-deployment"
+    namespace = "goodfood"
+  }
 
-# Déploiement de l'application sur AKS
+  spec {
+    replicas = 1
+
+    selector {
+      match_labels = {
+        app = "user"
+      }
+    }
+
+    template {
+      metadata {
+        labels = {
+          app = "user"
+        }
+      }
+
+      spec {
+        container {
+          image = "gregcesimaalsi23/goodfood-user:amd64"
+          name  = "user"
+
+          env {
+            name  = "DATABASE_URL"
+            value = "sqlserver://${azurerm_mssql_server.mssql-srv.name}.database.windows.net:1433;database=${azurerm_mssql_database.db-user.name};user=${azurerm_mssql_server.mssql-srv.administrator_login};password={${azurerm_mssql_server.mssql-srv.administrator_login_password};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;"
+          }
+
+          port {
+            container_port = 3000
+          }
+
+          resources {
+            limits = {
+              cpu    = "0.5"
+              memory = "512Mi"
+            }
+            requests = {
+              cpu    = "250m"
+              memory = "50Mi"
+            }
+          }
+        }
+      }
+    }
+  }
+}
