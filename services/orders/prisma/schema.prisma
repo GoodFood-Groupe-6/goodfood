@@ -9,21 +9,15 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlserver"
   url      = env("DATABASE_URL")
 }
 
-enum Status {
-  PENDING //En attente d'un livreur
-  ON_DELIVERY // En cours de livraison
-  DELIVERED // Livré
-}
-
 model orders {
-  id String @id @default(uuid())
-  products Json
+  id           String   @id @default(uuid())
+  products     String
   total_amount String
-  address String
-  user_id String
-  created_at DateTime @default(now())
+  address      String
+  user_id      String
+  created_at   DateTime @default(now())
 }

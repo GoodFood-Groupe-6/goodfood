@@ -1,12 +1,14 @@
 services:
   database:
-    container_name: user-database
+    container_name: "user-database"
     image: mcr.microsoft.com/mssql/server:2022-latest
-    volumes:
-      - ./user-data:/var/lib/postgresql/data
-    environment:
-      - MSSQL_SA_PASSWORD=yourStrong(!)Password
-      - ACCEPT_EULA=Y
     ports:
-      - "1433:1433"
-    hostname: mssql-srv
+      - "127.0.0.1:1433:1433"
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password
+    volumes:
+      - "user-database:/var/lib/postgresql/data"
+
+volumes:
+  user-database:

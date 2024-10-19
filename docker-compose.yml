@@ -44,7 +44,7 @@ services:
     container_name: user
     image: gregcesimaalsi23/goodfood-user-management:latest
     # build:
-    #   context: ./services/user-management
+    #   context: ./services/user
     #   dockerfile: Dockerfile
     environment:
       - RABBITMQ_URL=amqp://${RABBITMQ_DEFAULT_USER}:${RABBITMQ_DEFAULT_PASS}@rabbitmq:5672

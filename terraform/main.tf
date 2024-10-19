@@ -130,3 +130,22 @@ resource "kubernetes_deployment" "deployment-user" {
     }
   }
 }
+
+resource "kubernetes_service" "user-service" {
+  metadata {
+    name = "user-service"
+  }
+
+  spec {
+    selector = {
+      app = kubernetes_deployment.deployment-user.spec.0.selector.0.match_labels.app
+    }
+
+    port {
+      port        = 3000
+      target_port = 80
+    }
+
+    type = "LoadBalancer"
+  }
+}

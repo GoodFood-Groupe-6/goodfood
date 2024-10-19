@@ -2,9 +2,18 @@
 
 ## Prérequis
 
-[OpenLens](https://github.com/MuhammedKalkan/OpenLens)
-[Docker Desktop](https://www.docker.com/products/docker-desktop/)
-[Activer l'extension Kubernetes dans Docker Desktop](https://docs.docker.com/desktop/kubernetes/#install-and-turn-on-kubernetes)
+- [OpenLens](https://github.com/MuhammedKalkan/OpenLens)
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/)
+- [Activer l'extension Kubernetes dans Docker Desktop](https://docs.docker.com/desktop/kubernetes/#install-and-turn-on-kubernetes)
+
+## Port Mapping
+| PORT  | SERVICE  |
+|-------|----------|
+| 30000 | USER     |
+| 30001 | ORDER    |
+| 30002 | PRODUCT  |
+| 30003 | RABBITMQ |
+| 30004 | ADMIN    |
 
 ## Créer le namespace Goodfood
 
@@ -42,3 +51,20 @@ curl -X POST http://localhost:30001/
 ```
 
 PS : On peut communiquer directement avec le service car j'ai mis le type nodePort.
+
+## Exemple de deplyment pour Terraform 
+````yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: product-service
+  namespace: goodfood
+spec:
+  type: LoadBalancer
+  selector:
+    app: product
+  ports:
+    - name: "http"
+      port: 80
+      targetPort: 8080
+````

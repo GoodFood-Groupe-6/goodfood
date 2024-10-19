@@ -21,21 +21,21 @@ spec:
             - containerPort: 3000
           env:
             - name: RABBITMQ_URL
-              value: amqp://user:password@rabbitmq-service:5672
+              value: "amqp://user:password@rabbitmq-service:5672"
             - name: DATABASE_URL
-              value: sqlserver://srv-database-test.database.windows.net:1433;database=db-test;user=srv-database-test@srv-database-test;password={DGi5LysxiquJTH};encrypt=true;trustServerCertificate=false;hostNameInCertificate=*.database.windows.net;loginTimeout=30;
+              value: "sqlserver://127.0.0.1:1433;database=users;user=sa;password={yourStrongPassword#};trustServerCertificate=true;encrypt=true;"
             - name: JWT_SECRET
-              value: rTjLKctZ6t3eGA
-        - name: database
-          image: postgres:16
+              value: "rTjLKctZ6t3eGA"
+        - name: database-user
+          image: mcr.microsoft.com/mssql/server:2022-latest
           imagePullPolicy: Always
           ports:
-            - containerPort: 5432
+            - containerPort: 1433
           env:
-            - name: POSTGRES_PASSWORD
-              value: root
-            - name: POSTGRES_DB
-              value: user
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_SA_PASSWORD
+              value: "yourStrongPassword#"
 ---
 apiVersion: v1
 kind: Service
@@ -43,9 +43,11 @@ metadata:
   name: user-service
   namespace: goodfood
 spec:
+  type: NodePort
   selector:
     app: user
   ports:
     - name: "http"
       port: 3000
       targetPort: 3000
+      nodePort: 30000

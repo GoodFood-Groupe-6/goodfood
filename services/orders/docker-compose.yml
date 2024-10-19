@@ -1,12 +1,12 @@
 services:
   database:
     container_name: "order-database"
-    image: postgres:16
+    image: mcr.microsoft.com/mssql/server:2022-latest
     ports:
-      - "127.0.0.1:5432:5432"
+      - "127.0.0.1:1433:1433"
     environment:
-      - POSTGRES_PASSWORD=root
-      - POSTGRES_DB=orders
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=yourStrong(!)Password
     volumes:
       - "order-database:/var/lib/postgresql/data"
 

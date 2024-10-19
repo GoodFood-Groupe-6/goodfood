@@ -23,14 +23,24 @@ spec:
             - containerPort: 3000
           env:
             - name: RABBITMQ_URL
-              value: amqp://user:password@rabbitmq-service:5672
+              value: "amqp://user:password@rabbitmq-service:5672"
             - name: DATABASE_URL
-              value: postgres://postgres:root@localhost:5432/orders
+              value: "sqlserver://127.0.0.1:1433;database=orders;user=sa;password={yourStrongPassword#};trustServerCertificate=true;encrypt=true;"
           resources:
             limits:
               cpu: 500m
             requests:
               cpu: 200m
+        - name: database-order
+          image: mcr.microsoft.com/mssql/server:2022-latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 1433
+          env:
+            - name: ACCEPT_EULA
+              value: "Y"
+            - name: MSSQL_SA_PASSWORD
+              value: "yourStrongPassword#"
 ---
 apiVersion: v1
 kind: Service
@@ -45,4 +55,4 @@ spec:
     - name: "http"
       port: 3000
       targetPort: 3000
-      nodePort: 30004
+      nodePort: 30001
